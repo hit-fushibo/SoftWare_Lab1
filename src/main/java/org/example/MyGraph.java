@@ -3,12 +3,13 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import scala.xml.Null;
 
 import java.util.ArrayList;
 import java.util.Map;
 
 public class MyGraph {
-    private ArrayList<ArrayList<Map<>>> wordGraph;
+    private ArrayList<ArrayList<Integer>> wordGraph;
     private Map<Integer,String> ItoS;
     private Map<String,Integer> StoI;
 
@@ -45,7 +46,7 @@ public class MyGraph {
      * @return
      */
     public ArrayList<ArrayList<String>> getGraph(){
-
+        return null;
     }
 
     /**
