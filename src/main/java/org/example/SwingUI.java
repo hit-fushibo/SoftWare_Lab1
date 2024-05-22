@@ -2,6 +2,8 @@ package org.example;
 
 import org.graphstream.stream.file.FileSinkImages;
 import org.graphstream.stream.file.images.Resolutions;
+import org.graphstream.ui.layout.Layout;
+import org.graphstream.ui.layout.Layouts;
 import org.graphstream.ui.swing.util.SwingFileSinkImages;
 import org.graphstream.ui.swing_viewer.SwingViewer;
 import org.graphstream.ui.view.View;
@@ -53,6 +55,10 @@ public class SwingUI {
         frame.setLayout(new GridLayout(1, 2));
         SwingViewer viewer = new SwingViewer(this.graphs.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
+        Layout layout=Layouts.newLayoutAlgorithm();
+        this.graphs.graph.addSink(layout);
+        layout.addAttributeSink(this.graphs.graph);
+
         View view = viewer.addDefaultView(false);
         view.getCamera().setViewPercent(1.5);
         this.leftPanel = new JPanel() {
