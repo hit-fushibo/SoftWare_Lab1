@@ -255,7 +255,10 @@ public class SwingUI {
             JOptionPane.showMessageDialog(null, "No \"" + dest + "\" in the graph!");
         } else if (this.isError.get() == 3) {
             JOptionPane.showMessageDialog(null, "No \"" + sour + "\" and \"" + dest + "\" in the graph!");
-        } else {
+        }else if (bridgeWords.size()==0){
+            JOptionPane.showMessageDialog(null, "No bridge words form\"" + sour + "\" to \"" + dest + "\"!");
+        }
+        else {
             this.graphs.setNodeFillRed(sour);
             this.graphs.setNodeFillRed(dest);
             for (String b : bridgeWords) {
