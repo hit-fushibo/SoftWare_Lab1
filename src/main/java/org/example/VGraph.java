@@ -20,6 +20,11 @@ public class VGraph {
         this.graph.setAttribute("ui.stylesheet", "node {shape: circle; size: 80px, 80px; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center; text-size: 20px;}");
     }
 
+    /**
+     * 构建图
+     * @param G
+     * MyGraph类的getVGraph方法返回值
+     */
     public void CreatGraph(Map<String, ArrayList<String>> G) {
         Set<String> nodes = G.keySet();
         for (String node : nodes) {
@@ -35,32 +40,60 @@ public class VGraph {
 
     }
 
+    /**
+     * 设置节点颜色为红色
+     * @param nodeName
+     * 节点名称
+     */
     public void setNodeFillRed(String nodeName) {
         this.graph.getNode(nodeName).setAttribute("ui.style", "fill-color: red;");
     }
 
+    /**
+     * 设置节点颜色为蓝色
+     * @param nodeName
+     * 节点名称
+     */
     public void setNodeFillBlue(String nodeName) {
         this.graph.getNode(nodeName).setAttribute("ui.style", "fill-color: blue;");
     }
-
+    /**
+     * 设置节点颜色为白色
+     * @param nodeName
+     * 节点名称
+     */
     public void setNodeFillWhite(String nodeName) {
         this.graph.getNode(nodeName).setAttribute("ui.style", "fill-color: white;");
     }
 
+    /**
+     * 设置边颜色为绿色
+     * @param edgeId
+     * 边ID
+     */
     public void setEdgeColorGreen(String edgeId) {
         this.graph.getEdge(edgeId).setAttribute("ui.style", "fill-color: green;");
     }
 
+    /**
+     * 设置所有节点为白色
+     */
     public void setAllNodeWhite() {
         for (Node node : this.graph) {
             node.setAttribute("ui.style", "fill-color: white;");
         }
     }
 
+    /**
+     * 设置所有边为黑色
+     */
     public void setAllEdgeDefault() {
         this.graph.edges().forEach(e -> e.setAttribute("ui.style", "fill-color: black;"));
     }
 
+    /**
+     * 清楚图的边和节点
+     */
     public void clearGraph() {
         // 清除所有节点
         for (Node node : this.graph) {

@@ -16,6 +16,11 @@ public class MyGraph {
         this.StoI = new HashMap<>();
     }
 
+    /**
+     * 向图中添加一个节点
+     * @param name
+     * 节点名称
+     */
     public void addNode(String name) {
         if (!this.StoI.containsKey(name)) {
             int nodeNum = wordGraph.size();
@@ -25,6 +30,14 @@ public class MyGraph {
             wordGraph.add(list);
         }
     }
+
+    /**
+     * 向图中添加一条边
+     * @param source
+     * 边起点
+     * @param destination
+     * 边终点
+     */
 
     public void addRelation(String source, String destination) {
         int sourceIndex = StoI.get(source);
@@ -47,7 +60,12 @@ public class MyGraph {
 
     }
 
-
+    /**
+     * 获取图结构，与fileIO的OutPutEdges方法一起输出图结构。
+     * @return
+     * 返回一个Map，其中每一个键值对代表从一个节点出发的所有边。其值为一个Map，每一个键值代表
+     * 边的终点以及权值。
+     */
     public Map<String, Map<String, Integer>> getGraph() {
         Map<String, Map<String, Integer>> graph = new HashMap<>();
         for (int i = 0; i < this.wordGraph.size(); i++) {
@@ -72,6 +90,11 @@ public class MyGraph {
         return graph;
     }
 
+    /**
+     * 与getGraph类似，但是不返回边权值信息。与VGraph类的CreateGraph方法一起构建可视化图
+     * @return
+     * 返回一个Map，其中每一个键值对代表从一个节点出发的所有边。其值为一个List，代表边的终点。
+     */
     public Map<String, ArrayList<String>> getVGraph() {
         Map<String, ArrayList<String>> graph = new HashMap<>();
         for (int i = 0; i < this.wordGraph.size(); i++) {
@@ -91,6 +114,17 @@ public class MyGraph {
     }
 
 
+    /**
+     * 查询给定word1到word2的桥接词
+     * @param sour
+     * word1
+     * @param dest
+     * word2
+     * @param isError
+     * 用于指示是否出错。0-无错误；1-word1不存在；2-word2不存在；3-word1和2都不存在。
+     * @return
+     * 返回word1到word2的所有桥接词构成的List，为空代表无桥接词。
+     */
     public ArrayList<String> searchBridgeWord(String sour, String dest, AtomicInteger isError) {
         if (inputCheck(sour, dest, isError)) return new ArrayList<>();
 
@@ -130,6 +164,13 @@ public class MyGraph {
         return false;
     }
 
+    /**
+     * 根据输入构建新的输出，功能4
+     * @param originText
+     * 原始文本，假设只以空格作为分隔符，无换行符以及非大小写字母字符
+     * @return
+     * 构建的新文本
+     */
     public String GetNewText(String originText) {
         String[] a = originText.split(" ");
         ArrayList<String> words = new ArrayList<>(Arrays.asList(a));
@@ -160,6 +201,17 @@ public class MyGraph {
         }
     }
 
+    /**
+     * 查询word1到word2的最短路径
+     * @param source
+     * word1
+     * @param destination
+     * word2
+     * @param isError
+     * 用于指示是否出错。0-无错误；1-word1不存在；2-word2不存在；3-word1和2都不存在。
+     * @return
+     * 由最短路径依次经过的节点名称构成的List，为空代表无最短路径即不可达。
+     */
     public ArrayList<String> shortestPath(String source, String destination, AtomicInteger isError) {
         if (inputCheck(source, destination, isError)) return new ArrayList<>();
         int sourceIndex = StoI.get(source.toLowerCase());
@@ -211,6 +263,11 @@ public class MyGraph {
         return path;
     }
 
+    /**
+     * 设置随机游走起点
+     * @return
+     * 起点名称
+     */
     public String SetRandomWalkStartNode() {
         int nodeNum = this.wordGraph.size();
         Random random = new Random();
@@ -219,6 +276,13 @@ public class MyGraph {
         return this.ItoS.get(nodeIndex);
     }
 
+    /**
+     * 单步随机游走
+     * @param isStop
+     * 指示随机游走是否停止，遇到重复边或无出边
+     * @return
+     * 游走到的节点名称
+     */
     public String RandomWalkOneStep(AtomicInteger isStop) {
         int currentNodeIndex = this.StoI.get(randomWalkNodeName);
         ArrayList<Map<Integer, Integer>> adjList = this.wordGraph.get(currentNodeIndex);
