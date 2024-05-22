@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
-@SuppressWarnings({"FieldCanBeLocal", "StringConcatenationInLoop"})
+@SuppressWarnings({"FieldCanBeLocal", "StringConcatenationInLoop", "BusyWait"})
 public class SwingUI {
     private final VGraph graphs;
     private final MyGraph G;
@@ -189,6 +189,7 @@ public class SwingUI {
                     for(int ii=0;ii<nodes.size()-2;ii++){
                         if(nodes.get(ii).equals(s)&&nodes.get(ii+1).equals(d)){
                             flag=true;
+                            break;
                         }
                     }
                     if(flag){
