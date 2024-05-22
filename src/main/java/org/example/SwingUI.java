@@ -170,6 +170,7 @@ public class SwingUI {
             AtomicInteger isStop = new AtomicInteger(0);
             while (!this.stopTraversal.get()) {
                 nodes.add(currentNode);
+
                 nextNode = G.RandomWalkOneStep(isStop);
                 if (isStop.get() == 1) {
                     this.graphs.setNodeFillWhite(currentNode);
@@ -178,6 +179,22 @@ public class SwingUI {
                     this.graphs.setNodeFillWhite(currentNode);
                     this.graphs.setNodeFillBlue(nextNode);
                     currentNode = nextNode;
+                }
+                //判断是否有重复边
+                boolean flag=false;
+                if(nodes.size()>2){
+                    String s=nodes.get(nodes.size()-2);
+                    String d=nodes.get(nodes.size()-1);
+                    for(int ii=0;ii<nodes.size()-2;ii++){
+                        if(nodes.get(ii).equals(s)&&nodes.get(ii+1).equals(d)){
+                            flag=true;
+                        }
+                    }
+                    if(flag){
+                        this.graphs.setAllNodeWhite();
+                        break;
+
+                    }
                 }
                 try {
                     Thread.sleep(1000);
