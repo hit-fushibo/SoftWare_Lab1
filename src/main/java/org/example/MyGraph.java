@@ -4,13 +4,18 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyGraph {
-    private final ArrayList<ArrayList<Map<Integer, Integer>>> wordGraph;
-    private final Map<Integer, String> ItoS;
-    private final Map<String, Integer> StoI;
+    private ArrayList<ArrayList<Map<Integer, Integer>>> wordGraph;
+    private Map<Integer, String> ItoS;
+    private Map<String, Integer> StoI;
 
     private String randomWalkNodeName;
 
     public MyGraph() {
+        this.wordGraph = new ArrayList<>();
+        this.ItoS = new HashMap<>();
+        this.StoI = new HashMap<>();
+    }
+    public void delGraph(){
         this.wordGraph = new ArrayList<>();
         this.ItoS = new HashMap<>();
         this.StoI = new HashMap<>();

@@ -150,6 +150,7 @@ public class SwingUI {
         if (returnValue == JFileChooser.APPROVE_OPTION) {
             String selectedFilePath = fileChooser.getSelectedFile().getAbsolutePath();
             this.I.setFilePath(selectedFilePath);
+            this.G.delGraph();
             this.I.CreateGraph(this.G);
             this.graphs.clearGraph();
             Map<String, ArrayList<String>> vg = this.G.getVGraph();
