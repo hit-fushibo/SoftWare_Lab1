@@ -6,6 +6,7 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,15 +100,14 @@ public class VGraph {
      * 清楚图的边和节点
      */
     public void clearGraph() {
-        // 清除所有节点
-        for (Node node : this.graph) {
-            node.removeAttribute("ui.label");
-            node.clearAttributes();
-            this.graph.removeNode(node);
-        }
 
-        // 清除所有边
-        this.graph.edges().forEach(e -> this.graph.removeEdge(e));
+        this.graph.clear();
+        this.graph.setAttribute("ui.quality");
+        this.graph.setAttribute("ui.antialias");
+
+        // 设置默认样式
+        this.graph.setAttribute("ui.stylesheet", "node {shape: circle; size: 80px, 80px; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center; text-size: 20px;}");
+
 
     }
 }

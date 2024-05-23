@@ -4,148 +4,89 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class MyGraph {
-    private ArrayList<ArrayList<Map<Integer, Integer>>> wordGraph;
-    private Map<Integer, String> ItoS;
-    private Map<String, Integer> StoI;
+    //wordGraph代表整个有向图，最外层的ArrayList表示一个结点
+    private final ArrayList<NodeEntity> nodeGraph;
+//    private final ArrayList<ArrayList<Map<Integer, Integer>>> wordGraph;
+    private final Map<Integer, String> ItoS;
+    private final Map<String, Integer> StoI;
 
     private String randomWalkNodeName;
 
+    //构造器
     public MyGraph() {
-        this.wordGraph = new ArrayList<>();
-        this.ItoS = new HashMap<>();
-        this.StoI = new HashMap<>();
-    }
-    public void delGraph(){
-        this.wordGraph = new ArrayList<>();
+        this.nodeGraph = new ArrayList<>();
+//        this.wordGraph = new ArrayList<>();
         this.ItoS = new HashMap<>();
         this.StoI = new HashMap<>();
     }
 
-    /**
-     * 向图中添加一个节点
-     * @param name
-     * 节点名称
-     */
     public void addNode(String name) {
+        //查询现有图中是否有name字符串结点
         if (!this.StoI.containsKey(name)) {
-            int nodeNum = wordGraph.size();
+            //如果没有包含，说明是新结点，要加入图中
+            int nodeNum = nodeGraph.size();
             ItoS.put(nodeNum, name);
             StoI.put(name, nodeNum);
-            ArrayList<Map<Integer, Integer>> list = new ArrayList<>();
-            wordGraph.add(list);
+            nodeGraph.add(new NodeEntity(name));
         }
     }
-
-    /**
-     * 向图中添加一条边
-     * @param source
-     * 边起点
-     * @param destination
-     * 边终点
-     */
 
     public void addRelation(String source, String destination) {
         int sourceIndex = StoI.get(source);
         int destIndex = StoI.get(destination);
         int flag = 1;
-        ArrayList<Map<Integer, Integer>> sourceList = wordGraph.get(sourceIndex);
-        for (Map<Integer, Integer> edge : sourceList) {
-            if (edge.containsKey(destIndex)) {
-                int currentWeight = edge.get(destIndex);
-                edge.remove(destIndex); // 删除原始权值记录
-                edge.put(destIndex, currentWeight + 1); // 更新边的权值
-                flag = 0;
-            }
-        }
-        if (flag == 1) {
-            Map<Integer, Integer> newEdge = new HashMap<>();
-            newEdge.put(destIndex, 1); // 新建边，权值为1
-            sourceList.add(newEdge);
-        }
+        NodeEntity sourceNode = nodeGraph.get(sourceIndex);
+        sourceNode.addEdges(nodeGraph.get(destIndex).getName());
 
     }
 
-    /**
-     * 获取图结构，与fileIO的OutPutEdges方法一起输出图结构。
-     * @return
-     * 返回一个Map，其中每一个键值对代表从一个节点出发的所有边。其值为一个Map，每一个键值代表
-     * 边的终点以及权值。
-     */
+
+    //获取整个图的边权重集合，Map的键String表示节点名，值也是Map形式，进一步根据目标节点的名称查该边权重
     public Map<String, Map<String, Integer>> getGraph() {
         Map<String, Map<String, Integer>> graph = new HashMap<>();
-        for (int i = 0; i < this.wordGraph.size(); i++) {
-            String sourceName = this.ItoS.get(i);
-            ArrayList<Map<Integer, Integer>> adjList = this.wordGraph.get(i);
-            Map<String, Integer> newEdge = new HashMap<>();
-            for (Map<Integer, Integer> edge : adjList) {
-
-                Set<Integer> distIndex = edge.keySet();
-                for (int dist_index : distIndex) {
-                    String distName = this.ItoS.get(dist_index);
-                    int weight = edge.get(dist_index);
-
-                    newEdge.put(distName, weight);
-
-                }
-
-
+        for (int i = 0; i < nodeGraph.size(); i++) {
+            //针对图的每个节点，获取边集，以Map<String, Integer>格式存储
+            String sourceName = ItoS.get(i);
+            NodeEntity node = nodeGraph.get(i);
+            ArrayList<EdgeEntity> nodeEdge = node.getEdges();
+            Map<String, Integer> edgeMap = new HashMap<>();
+            for (EdgeEntity item : nodeEdge) {
+                edgeMap.put(item.getEndNode(),item.getWeight());
             }
-            graph.put(sourceName, newEdge);
+            graph.put(sourceName, edgeMap);
         }
         return graph;
     }
 
-    /**
-     * 与getGraph类似，但是不返回边权值信息。与VGraph类的CreateGraph方法一起构建可视化图
-     * @return
-     * 返回一个Map，其中每一个键值对代表从一个节点出发的所有边。其值为一个List，代表边的终点。
-     */
+    //获取整个图的边集合，根据String（节点名称查）
     public Map<String, ArrayList<String>> getVGraph() {
         Map<String, ArrayList<String>> graph = new HashMap<>();
-        for (int i = 0; i < this.wordGraph.size(); i++) {
-            String sourceName = this.ItoS.get(i);
-            ArrayList<Map<Integer, Integer>> adjList = this.wordGraph.get(i);
-            ArrayList<String> edges = new ArrayList<>();
-            for (Map<Integer, Integer> edge : adjList) {
-                Set<Integer> destIndexes = edge.keySet();
-                for (int destIndex : destIndexes) {
-                    String destName = this.ItoS.get(destIndex);
-                    edges.add(destName);
-                }
+        for (int i = 0; i < nodeGraph.size(); i++) {
+            String sourceName = ItoS.get(i);
+            NodeEntity node = nodeGraph.get(i);
+            ArrayList<EdgeEntity> edges = node.getEdges();
+            ArrayList<String> edgeName = new ArrayList<>();
+            for(EdgeEntity item:edges){
+                edgeName.add(new String(item.getEndNode()));
             }
-            graph.put(sourceName, edges);
+            graph.put(sourceName, edgeName);
         }
         return graph;
     }
 
-
-    /**
-     * 查询给定word1到word2的桥接词
-     * @param sour
-     * word1
-     * @param dest
-     * word2
-     * @param isError
-     * 用于指示是否出错。0-无错误；1-word1不存在；2-word2不存在；3-word1和2都不存在。
-     * @return
-     * 返回word1到word2的所有桥接词构成的List，为空代表无桥接词。
-     */
+    //查询桥接词
     public ArrayList<String> searchBridgeWord(String sour, String dest, AtomicInteger isError) {
         if (inputCheck(sour, dest, isError)) return new ArrayList<>();
 
         ArrayList<String> bridgeWords = new ArrayList<>();
         int sIndex = this.StoI.get(sour);
-        int dIndex = this.StoI.get(dest);
-        ArrayList<Map<Integer, Integer>> adjList = this.wordGraph.get(sIndex);
-        for (Map<Integer, Integer> edge : adjList) {
-            Set<Integer> mIndexes = edge.keySet();
-            for (int mIndex : mIndexes) {
-                ArrayList<Map<Integer, Integer>> mAdjList = this.wordGraph.get(mIndex);
-                for (Map<Integer, Integer> mEdge : mAdjList) {
-                    if (mEdge.containsKey(dIndex)) {
-                        String bridgeWord = this.ItoS.get(mIndex);
-                        bridgeWords.add(bridgeWord);
-                    }
+        ArrayList<EdgeEntity> edgeList = nodeGraph.get(sIndex).getEdges();
+        for(EdgeEntity item: edgeList){
+            NodeEntity bridgeNode = nodeGraph.get(StoI.get(item.getEndNode()));
+            for(EdgeEntity bridge : bridgeNode.getEdges()){
+                if(bridge.getEndNode().equals(dest)){
+                    bridgeWords.add(bridgeNode.getName());
+                    break;
                 }
             }
         }
@@ -169,13 +110,6 @@ public class MyGraph {
         return false;
     }
 
-    /**
-     * 根据输入构建新的输出，功能4
-     * @param originText
-     * 原始文本，假设只以空格作为分隔符，无换行符以及非大小写字母字符
-     * @return
-     * 构建的新文本
-     */
     public String GetNewText(String originText) {
         String[] a = originText.split(" ");
         ArrayList<String> words = new ArrayList<>(Arrays.asList(a));
@@ -206,108 +140,137 @@ public class MyGraph {
         }
     }
 
-    /**
-     * 查询word1到word2的最短路径
-     * @param source
-     * word1
-     * @param destination
-     * word2
-     * @param isError
-     * 用于指示是否出错。0-无错误；1-word1不存在；2-word2不存在；3-word1和2都不存在。
-     * @return
-     * 由最短路径依次经过的节点名称构成的List，为空代表无最短路径即不可达。
-     */
     public ArrayList<String> shortestPath(String source, String destination, AtomicInteger isError) {
         if (inputCheck(source, destination, isError)) return new ArrayList<>();
         int sourceIndex = StoI.get(source.toLowerCase());
         int destIndex = StoI.get(destination.toLowerCase());
+        int graphSize = nodeGraph.size();
 
-        // 使用Dijkstra算法计算最短路径
-        PriorityQueue<Map.Entry<Integer, Integer>> pq = new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));
-        Map<Integer, Integer> distance = new HashMap<>();
-        Map<Integer, Integer> parent = new HashMap<>();
-        for (int i = 0; i < wordGraph.size(); i++) {
-            distance.put(i, Integer.MAX_VALUE);
-            parent.put(i, -1);
+        Map<String,Integer> distance = new HashMap<>();
+        Integer[] usedNodes = new Integer[nodeGraph.size()];
+        Boolean[] searched = new Boolean[nodeGraph.size()];
+        usedNodes[sourceIndex] = sourceIndex;
+        for(int i = 0;i < graphSize;i++){
+            usedNodes[i] = graphSize;
+            searched[i] = false;
+            if(i == sourceIndex){
+                searched[i] = true;
+                continue;
+            }
+            distance.put(nodeGraph.get(i).getName(),Integer.MAX_VALUE);
         }
 
-        distance.put(sourceIndex, 0);
-        pq.offer(new AbstractMap.SimpleEntry<>(sourceIndex, 0));
+        // 使用Dijkstra算法计算最短路径
+        ArrayList<EdgeEntity> nodeEdges;
+        //如果初始节点没有出边，返回空数组
+        NodeEntity nodeNow = nodeGraph.get(sourceIndex);
+        //nodeEdges是当前搜索节点的边集合
+        nodeEdges = nodeNow.getEdges();
+        if(nodeEdges.size() == 0){
+            return new ArrayList<>();
+        }
+        for(EdgeEntity item:nodeEdges){
+            distance.put(item.getEndNode(),item.getWeight());
+            usedNodes[StoI.get(item.getEndNode())] = sourceIndex;
+        }
+        int tempDistance;
+        int shortestNext = graphSize;
+        int shortestDistance = 0;
+        boolean flag;
+        do {
+            flag = false;
+            shortestNext = graphSize;
+            //选择当前要搜索的节点
+            for(int i = 0;i < graphSize;i++){
+                if(searched[i] || i == sourceIndex){
+                    continue;
+                }
+                if(shortestNext == graphSize){
+                    //只要能找到下一个要检查的节点，就继续循环
+                    flag = true;
+                    shortestNext = i;
+                    shortestDistance = distance.get(nodeGraph.get(shortestNext).getName());
+                }else{
+                    if(distance.get(nodeGraph.get(i).getName()) < shortestDistance){
+                        shortestNext = i;
+                        shortestDistance = distance.get(nodeGraph.get(i).getName());
+                    }
+                }
 
-        while (!pq.isEmpty()) {
-            Map.Entry<Integer, Integer> entry = pq.poll();
-            int u = entry.getKey();
-            int distU = entry.getValue();
-
-            if (distU > distance.get(u)) {
+            }
+            if(shortestNext == destIndex){
+                break;
+            }
+            nodeNow = nodeGraph.get(shortestNext);
+            nodeEdges = nodeNow.getEdges();
+            if(nodeEdges.size() == 0){
+                searched[shortestNext] = true;
                 continue;
             }
 
-            for (Map<Integer, Integer> edge : wordGraph.get(u)) {
-                for (int v : edge.keySet()) {
-                    int weight = edge.get(v);
-                    int newDist = distU + weight;
-
-                    if (newDist < distance.get(v)) {
-                        distance.put(v, newDist);
-                        parent.put(v, u);
-                        pq.offer(new AbstractMap.SimpleEntry<>(v, newDist));
-                    }
+            for(EdgeEntity item : nodeEdges){
+                if(item.getEndNode().equals(source))
+                    continue;
+                tempDistance = item.getWeight() + shortestDistance;
+                if(tempDistance < distance.get(item.getEndNode())){
+                    distance.put(item.getEndNode(),tempDistance);
+                    usedNodes[StoI.get(item.getEndNode())] = shortestNext;
                 }
             }
-        }
+            searched[shortestNext] = true;
+        }while (flag);
 
-        // 构造路径
-        ArrayList<String> path = new ArrayList<>();
-        int current = destIndex;
-        while (current != -1) {
-            path.add(0, ItoS.get(current));
-            current = parent.get(current);
+        //如果算法运行完，到目的节点的距离仍为无限大，那么说明源到目的之间没有路
+        if(usedNodes[destIndex] == graphSize){
+            return new ArrayList<>();
         }
+        ArrayList<String> path = new ArrayList<>();
+        int i = destIndex;
+        while(i != sourceIndex){
+
+            path.add(0,nodeGraph.get(i).getName());
+            i = usedNodes[i];
+        }
+        path.add(0,nodeGraph.get(i).getName());
 
         return path;
+
     }
 
-    /**
-     * 设置随机游走起点
-     * @return
-     * 起点名称
-     */
     public String SetRandomWalkStartNode() {
-        int nodeNum = this.wordGraph.size();
+        int nodeNum = nodeGraph.size();
         Random random = new Random();
         int nodeIndex = random.nextInt(nodeNum);
         this.randomWalkNodeName = this.ItoS.get(nodeIndex);
         return this.ItoS.get(nodeIndex);
     }
 
-    /**
-     * 单步随机游走
-     * @param isStop
-     * 指示随机游走是否停止，遇到重复边或无出边
-     * @return
-     * 游走到的节点名称
-     */
     public String RandomWalkOneStep(AtomicInteger isStop) {
         int currentNodeIndex = this.StoI.get(randomWalkNodeName);
-        ArrayList<Map<Integer, Integer>> adjList = this.wordGraph.get(currentNodeIndex);
-        int nextNodeNum = adjList.size();
+        //获取当前节点的边集合
+        ArrayList<EdgeEntity> edgeList = nodeGraph.get(currentNodeIndex).getEdges();
+        //如果当前节点没有出边，停止搜索
+        int nextNodeNum = edgeList.size();
         if (nextNodeNum == 0) {
             isStop.set(1);
             return "";
         } else {
+            //获取随机数，确定随机游走的下一个节点
             String nextNode = "";
             Random random = new Random();
             int nextNodeIndex = random.nextInt(nextNodeNum);
-            Map<Integer, Integer> edge = adjList.get(nextNodeIndex);
-            Set<Integer> nextNodeIndexes = edge.keySet();
-            for (int i : nextNodeIndexes) {
-                nextNode = this.ItoS.get(i);
-            }
+
+            EdgeEntity edge = edgeList.get(nextNodeIndex);
+            nextNode = edge.getEndNode();
             this.randomWalkNodeName = nextNode;
             return nextNode;
 
         }
+    }
+    public void delGraph(){
+        this.nodeGraph.clear();
+        this.StoI.clear();
+        this.ItoS.clear();
     }
 
 
