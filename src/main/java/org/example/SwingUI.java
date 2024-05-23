@@ -47,6 +47,7 @@ public class SwingUI {
         this.graphs = graphs;
         this.G = g;
         this.I = I;
+        this.randomWalkThread=null;
     }
 
     public void show() {
@@ -55,9 +56,9 @@ public class SwingUI {
         frame.setLayout(new GridLayout(1, 2));
         SwingViewer viewer = new SwingViewer(this.graphs.graph, Viewer.ThreadingModel.GRAPH_IN_ANOTHER_THREAD);
         viewer.enableAutoLayout();
-        Layout layout=Layouts.newLayoutAlgorithm();
-        this.graphs.graph.addSink(layout);
-        layout.addAttributeSink(this.graphs.graph);
+//        Layout layout=Layouts.newLayoutAlgorithm();
+//        this.graphs.graph.addSink(layout);
+//        layout.addAttributeSink(this.graphs.graph);
 
         View view = viewer.addDefaultView(false);
         view.getCamera().setViewPercent(1.5);
@@ -165,6 +166,9 @@ public class SwingUI {
     }
 
     private void onRandomWalkBeginButtonPressed(ActionEvent e) {
+        if(this.randomWalkThread!=null&&this.randomWalkThread.isAlive()){
+            return;
+        }
         this.graphs.setAllNodeWhite();
         this.graphs.setAllEdgeDefault();
         this.stopTraversal.set(false);

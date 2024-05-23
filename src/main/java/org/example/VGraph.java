@@ -36,9 +36,9 @@ public class VGraph {
             ArrayList<String> adjList = G.get(source);
             for (String dest : adjList) {
                 Edge edge = this.graph.addEdge(source + "->" + dest, source, dest, true); // 添加有向边
-                edge.setAttribute("ui.style", "size: 3px;"); // 设置边的粗细为3像素
-                edge.setAttribute("ui.color", "black"); // 设置边的颜色为黑色
-                edge.setAttribute("layout.weight", 1000); // 设置边的长度为100
+//                edge.setAttribute("ui.style", "size: 3px;"); // 设置边的粗细为3像素
+//                edge.setAttribute("ui.color", "black"); // 设置边的颜色为黑色
+//                edge.setAttribute("layout.weight", 100); // 设置边的长度为100
             }
         }
 
