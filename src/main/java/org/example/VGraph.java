@@ -1,12 +1,10 @@
 package org.example;
 
-import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,10 +34,7 @@ public class VGraph {
         for (String source : nodes) {
             ArrayList<String> adjList = G.get(source);
             for (String dest : adjList) {
-                Edge edge = this.graph.addEdge(source + "->" + dest, source, dest, true); // 添加有向边
-//                edge.setAttribute("ui.style", "size: 3px;"); // 设置边的粗细为3像素
-//                edge.setAttribute("ui.color", "black"); // 设置边的颜色为黑色
-//                edge.setAttribute("layout.weight", 100); // 设置边的长度为100
+                this.graph.addEdge(source + "->" + dest, source, dest, true);
             }
         }
 
