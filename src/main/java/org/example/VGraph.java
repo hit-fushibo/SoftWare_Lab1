@@ -17,7 +17,8 @@ public class VGraph {
         this.graph.setAttribute("ui.antialias");
 
         // 设置默认样式
-        this.graph.setAttribute("ui.stylesheet", "node {shape: circle; size: 80px, 80px; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center; text-size: 20px;}");
+        this.graph.setAttribute("ui.stylesheet", "node {shape: circle; size: 80px, 80px; fill-color: white; " +
+                "stroke-mode: plain; stroke-color: black; text-alignment: center; text-size: 20px;}");
     }
 
     /**
@@ -101,7 +102,8 @@ public class VGraph {
         this.graph.setAttribute("ui.antialias");
 
         // 设置默认样式
-        this.graph.setAttribute("ui.stylesheet", "node {shape: circle; size: 80px, 80px; fill-color: white; stroke-mode: plain; stroke-color: black; text-alignment: center; text-size: 20px;}");
+        this.graph.setAttribute("ui.stylesheet", "node {shape: circle; size: 80px, 80px; fill-color: white; " +
+                "stroke-mode: plain; stroke-color: black; text-alignment: center; text-size: 20px;}");
 
 
     }

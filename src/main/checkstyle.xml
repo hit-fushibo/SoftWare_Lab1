@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <!-- 官方主页： https://checkstyle.sourceforge.io -->
+    <!-- 检查文件是否以一个空行结束 -->
+    <module name="NewlineAtEndOfFile"/>
+    <!-- 文件长度不超过 1500 行 -->
+    <module name="FileLength">
+        <property name="max" value="1500"/>
+    </module>
+    <!-- 每行不超过 120 个字 -->
+    <module name="LineLength">
+        <property name="max" value="150"/>
+    </module>
+    <module name="TreeWalker">
+        <!-- import 中避免星号"*" -->
+        <module name="AvoidStarImport"/>
+        <!-- 检查是否从非法的包中导入了类 -->
+        <module name="IllegalImport"/>
+        <!-- 检查是否导入了多余的包 -->
+        <module name="RedundantImport"/>
+    </module>
+</module>
