@@ -118,8 +118,15 @@ public class MyGraph {
     }
 
     public String GetNewText(String originText) {
-        String[] a = originText.split(" ");
-        ArrayList<String> words = new ArrayList<>(Arrays.asList(a));
+        ArrayList<String> words = new ArrayList<>();
+        StringTokenizer tokenizer = new StringTokenizer(originText, "\n\t\r ");
+        while (tokenizer.hasMoreTokens()) {
+            String word = tokenizer.nextToken();
+            word = word.replaceAll("[^a-zA-Z]", "");
+            if (!word.isEmpty()) {
+                words.add(word);
+            }
+        }
         int len = words.size();
         if (len <= 1) {
             return originText;
@@ -128,7 +135,7 @@ public class MyGraph {
             Random random = new Random();
             AtomicInteger isError = new AtomicInteger(0);
             for (int i = 0; i < words.size() - 1; i++) {
-                if (this.StoI.containsKey(words.get(i)) && this.StoI.containsKey(words.get(i + 1))) {
+                if (this.StoI.containsKey(words.get(i).toLowerCase()) && this.StoI.containsKey(words.get(i + 1).toLowerCase())) {
                     ArrayList<String> bridgeWords = this.searchBridgeWord(words.get(i).toLowerCase(), words.get(i + 1).toLowerCase(), isError);
                     if (bridgeWords.isEmpty()) {
                         newWords.add(words.get(i));
