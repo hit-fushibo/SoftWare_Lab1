@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class Main {
     public static void main(String[] args) {
-        fileIO test = new fileIO();
+        FileIo test = new FileIo();
         MyGraph G = new MyGraph();
         test.setFilePath("./src/test.txt");
         test.CreateGraph(G);

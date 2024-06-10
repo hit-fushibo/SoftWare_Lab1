@@ -24,7 +24,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class SwingUI {
     private final VGraph graphs;
     private final MyGraph G;
-    private final fileIO I;
+    private final FileIo I;
     private final AtomicBoolean isRandomWalkFinished = new AtomicBoolean(false);
     private final AtomicBoolean stopTraversal = new AtomicBoolean(false);
     private final AtomicInteger isError = new AtomicInteger(0);
@@ -41,7 +41,7 @@ public class SwingUI {
     private JTextArea originText;
     private JPanel leftPanel;
 
-    public SwingUI(VGraph graphs, MyGraph g, fileIO I) {
+    public SwingUI(VGraph graphs, MyGraph g, FileIo I) {
         this.graphs = graphs;
         this.G = g;
         this.I = I;
