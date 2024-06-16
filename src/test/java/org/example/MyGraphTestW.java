@@ -8,7 +8,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.junit.Assert.*;
 
-public class MyGraphTest extends MyGraph {
+public class MyGraphTestW extends MyGraph {
 
     MyGraph G;
     AtomicInteger i ;
