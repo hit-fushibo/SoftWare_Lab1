@@ -74,7 +74,7 @@ public class MyGraph {
             ArrayList<EdgeEntity> edges = node.getEdges();
             ArrayList<String> edgeName = new ArrayList<>();
             for(EdgeEntity item:edges){
-                edgeName.add(new String(item.getEndNode()));
+                edgeName.add(item.getEndNode());
             }
             graph.put(sourceName, edgeName);
         }
@@ -84,7 +84,6 @@ public class MyGraph {
     //查询桥接词
     public ArrayList<String> searchBridgeWord(String sour, String dest, AtomicInteger isError) {
         if (inputCheck(sour, dest, isError)) return new ArrayList<>();
-
         ArrayList<String> bridgeWords = new ArrayList<>();
         int sIndex = this.StoI.get(sour);
         ArrayList<EdgeEntity> edgeList = nodeGraph.get(sIndex).getEdges();
